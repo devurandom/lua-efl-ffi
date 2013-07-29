@@ -1,5 +1,8 @@
 all: pre/evas/Evas_GL.E pre/evas/Evas_GL.D
 
+clean:
+	$(RM) -r pre
+
 pre/evas:
 	mkdir -p $@
 
