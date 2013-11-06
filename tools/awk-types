@@ -1,0 +1,1 @@
+$2=="typedef" { print "cdecl_type("$1")" }

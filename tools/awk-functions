@@ -1,0 +1,1 @@
+$2=="function" { print "cdecl_func("$1")" }

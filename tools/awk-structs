@@ -1,0 +1,1 @@
+$2=="struct" { print "cdecl_struct("$1")" }
