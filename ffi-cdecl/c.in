@@ -1,5 +1,8 @@
 #define _XOPEN_SOURCE 700
 
+#include <stdarg.h>
+#define va_list void*
+
 <<HEADERS>>
 
 #include <ffi-cdecl.h>
