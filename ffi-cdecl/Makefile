@@ -72,4 +72,8 @@ $(foreach mod,$(modules),$(eval $(call makerule-ctags,$(mod),$(call getheaders,$
 # Many elc_ and elm_ headers lack header guards, thus we can only include the main header:
 elementary_HEADERS = Elementary.h
 
+# Several headers do not contain all necessary includes, so we put them manually in front
+ecore_HEADERS := Ecore.h Ecore_Input.h ${ecore_HEADERS}
+evas_HEADERS := Evas.h ${evas_HEADERS}
+
 $(foreach mod,$(modules),$(eval $(call makerule-c,$(mod))))
