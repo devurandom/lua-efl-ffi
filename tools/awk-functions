@@ -1,1 +1,1 @@
-$2=="function" { print "cdecl_func("$1")" }
+$2=="prototype" { print "cdecl_func("$1")" }
