@@ -1,4 +1,4 @@
-ffi-cdecl/*.c
-ffi-cdecl/*.ctags
-ffi-cdecl/*.lua
-ffi-cdecl/*.lua.in
+*.c
+*.ctags
+*.lua
+*.lua.in
