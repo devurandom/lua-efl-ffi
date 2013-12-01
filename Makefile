@@ -19,7 +19,7 @@ endif
 
 types = enums structs types functions defines
 modules = ecore evas elementary
-skip_headers = Ecore_X% Evas_Engine_% elm_route% elm_widget% elm_interface%
+skip_headers = Ecore_X% Evas_Engine_% Ecore_Wayland.h elm_route% elm_widget% elm_interface%
 version = 1
 
 getcflags = $(shell pkg-config --cflags $(1))
