@@ -51,7 +51,7 @@ $(1).ctags: $(2)
 endef
 
 define makerule-type-c
-$(1).$(2).c: $(1).ctags
+$(1).$(2).c: $(1).ctags tools/awk-$(2)
 	awk -f tools/awk-$(2) $$< | uniq > $$@
 
 endef
