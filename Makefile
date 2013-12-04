@@ -1,6 +1,9 @@
 SUBDIRS = gcc-lua gcc-lua-cdecl
 
 CC        = gcc
+AWK       = gawk
+SED       = sed
+CTAGS     = ctags
 CPPFLAGS  = -I$(FFI_CDECL_DIR)
 CFLAGS    = -std=c99 -Wall -Wno-deprecated-declarations
 GCCLUA    = gcc-lua/gcc/gcclua.so
@@ -47,27 +50,27 @@ $(SUBDIRS):
 
 define makerule-ctags
 $(1).ctags: $(2)
-	ctags -x --c-kinds=degmpstu $(2) > $$@
+	$(CTAGS) -x --c-kinds=degmpstu $(2) > $$@
 endef
 
 define makerule-type-c
 $(1).$(2).c: $(1).ctags tools/awk-$(2)
-	awk -f tools/awk-$(2) $$< | uniq > $$@
+	$(AWK) -f tools/awk-$(2) $$< | uniq > $$@
 
 endef
 
 define makerule-lua
 $(1).lua.in: templates/lua.in.in
-	sed "s/<<MODULE>>/$(1)/g" $$< > $$@
+	$(SED) "s/<<MODULE>>/$(1)/g" $$< > $$@
 endef
 
 define makerule-c
 $(1).c: templates/c.in $(foreach type,$(types),$(1).$(type).c)
-	sed "s/<<MODULE>>/$(1)/g" $$< > $$@
-	$(foreach header,$($(1)_HEADERS),sed "s/<<HEADERS>>/#include <$(header)>\n<<HEADERS>>/" -i $$@ &&) test $$$$? -eq 0
-	sed '/<<HEADERS>>/d' -i $$@
-	$(foreach type,$(types),sed "/<<SOURCES>>/r $(1).$(type).c" -i $$@ &&) test $$$$? -eq 0
-	sed '/<<SOURCES>>/d' -i $$@
+	$(SED) "s/<<MODULE>>/$(1)/g" $$< > $$@
+	$(foreach header,$($(1)_HEADERS),$(SED) "s/<<HEADERS>>/#include <$(header)>\n<<HEADERS>>/" -i $$@ &&) test $$$$? -eq 0
+	$(SED) '/<<HEADERS>>/d' -i $$@
+	$(foreach type,$(types),$(SED) "/<<SOURCES>>/r $(1).$(type).c" -i $$@ &&) test $$$$? -eq 0
+	$(SED) '/<<SOURCES>>/d' -i $$@
 endef
 
 $(foreach mod,$(modules),$(foreach type,$(types),$(eval $(call makerule-type-c,$(mod),$(type)))))
