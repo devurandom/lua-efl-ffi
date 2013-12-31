@@ -1,3 +1,5 @@
+*.D
+*.E
 *.c
 *.ctags
 *.lua.in

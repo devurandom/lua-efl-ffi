@@ -1,6 +1,10 @@
 local ffi = require("ffi")
 local C = require("C")
 
+if "<<MODULE>>" ~= "eina" then
+	require("eina")
+end
+
 ffi.cdef[[
 @CDECL@
 ]]
