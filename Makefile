@@ -4,6 +4,7 @@ CC        = gcc
 AWK       = gawk
 SED       = sed
 CTAGS     = ctags
+UNIQ      = uniq
 
 # Sanity checks
 ifeq ($(shell which $(CC)),)
@@ -17,6 +18,9 @@ $(error SED=$(SED) not found)
 endif
 ifeq ($(shell which $(CTAGS)),)
 $(error CTAGS=$(CTAGS) not found)
+endif
+ifeq ($(shell which $(UNIQ)),)
+$(error UNIQ=$(UNIQ) not found)
 endif
 
 CPPFLAGS  = -I$(FFI_CDECL_DIR)
@@ -77,8 +81,9 @@ endef
 
 define makerule-type-c
 $(1).$(2).c: $(1).ctags tools/awk-$(2)
-	$(AWK) -f tools/awk-$(2) $$< | uniq > $$@
-
+	$(AWK) -f tools/awk-$(2) $$< > $$@.tmp
+	$(UNIQ) < $$@.tmp > $$@
+	$(RM) -f $$@.tmp
 endef
 
 define makerule-lua
