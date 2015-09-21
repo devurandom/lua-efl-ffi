@@ -4,8 +4,24 @@ CC        = gcc
 AWK       = gawk
 SED       = sed
 CTAGS     = ctags
+
+# Sanity checks
+ifeq ($(shell which $(CC)),)
+$(error CC=$(CC) not found)
+endif
+ifeq ($(shell which $(AWK)),)
+$(error AWK=$(AWK) not found)
+endif
+ifeq ($(shell which $(SED)),)
+$(error SED=$(SED) not found)
+endif
+ifeq ($(shell which $(CTAGS)),)
+$(error CTAGS=$(CTAGS) not found)
+endif
+
 CPPFLAGS  = -I$(FFI_CDECL_DIR)
-CFLAGS    = -std=c99 -Wall -Wno-deprecated-declarations
+CFLAGS    = -std=c99 -D_XOPEN_SOURCE=700 -Wall -Wno-deprecated-declarations
+
 GCCLUA    = gcc-lua/gcc/gcclua.so
 FFI_CDECL = $(FFI_CDECL_DIR)/ffi-cdecl.lua
 
