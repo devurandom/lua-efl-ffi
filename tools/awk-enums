@@ -1,1 +1,1 @@
-$2=="enum" { print "cdecl_enum("$1")" }
+tolower($1)~tolower(symbol_pattern) && $2=="enum" { print "cdecl_enum("$1")" }
