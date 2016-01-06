@@ -28,12 +28,18 @@ FFI_CDECL = $(FFI_CDECL_DIR)/ffi-cdecl.lua
 ifndef FFI_CDECL_DIR
   GCC_CDECL_DIR = gcc-lua-cdecl
   FFI_CDECL_DIR = $(GCC_CDECL_DIR)/ffi-cdecl
+  FFI_CDECL_LUA_PATH = $(GCC_CDECL_DIR)/?.lua;$(GCC_CDECL_DIR)/?/init.lua
   ifdef LUA_PATH
-    LUA_PATH := $(GCC_CDECL_DIR)/?.lua;$(GCC_CDECL_DIR)/?/init.lua;$(LUA_PATH)
+    LUA_PATH := $(FFI_CDECL_LUA_PATH);$(LUA_PATH)
   else
-    LUA_PATH := $(GCC_CDECL_DIR)/?.lua;$(GCC_CDECL_DIR)/?/init.lua;;
+    LUA_PATH := $(FFI_CDECL_LUA_PATH);;
   endif
-  export LUA_PATH
+  ifdef LUA_PATH_5_2
+    LUA_PATH_5_2 := $(FFI_CDECL_LUA_PATH);$(LUA_PATH_5_2)
+  else
+    LUA_PATH_5_2 := $(FFI_CDECL_LUA_PATH);;
+  endif
+  export LUA_PATH LUA_PATH_5_2
 endif
 
 types = enums structs types functions defines
