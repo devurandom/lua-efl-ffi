@@ -46,7 +46,7 @@ ifndef FFI_CDECL_DIR
   export LUA_PATH LUA_PATH_5_2
 endif
 
-types = enums structs types functions defines
+types = enums structs unions types functions defines
 modules = ecore evas elementary
 skip_headers = Ecore_Common.h Ecore_X% Ecore_Wayland.h Evas_Common.h Evas_Legacy.h Evas_Engine_% elm_gen_common.h elm_route% elm_widget% elm_interface%
 version = 1
