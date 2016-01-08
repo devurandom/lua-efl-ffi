@@ -1,0 +1,9 @@
+END {
+	n = asorti(collect, filemap, "@ind_str_asc")
+	for (i = 1; i <= n; i++) {
+		m = asorti(collect[filemap[i]], linemap, "@ind_num_asc")
+		for (j = 1; j <= m; j++) {
+			print collect[filemap[i]][linemap[j]]
+		}
+	}
+}

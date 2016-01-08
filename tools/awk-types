@@ -1,1 +1,1 @@
-(symbol_include != "" && tolower($1)~tolower(symbol_include)) && !(symbol_exclude != "" && tolower($1)~tolower(symbol_exclude)) && $2=="typedef" { print "cdecl_type("$1")" }
+(symbol_include != "" && tolower($1)~tolower(symbol_include)) && !(symbol_exclude != "" && tolower($1)~tolower(symbol_exclude)) && $2=="typedef" { collect[$4][$3] = "cdecl_type("$1");" }

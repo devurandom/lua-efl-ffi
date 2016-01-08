@@ -1,1 +1,1 @@
-(symbol_include != "" && tolower($1)~tolower(symbol_include)) && !(symbol_exclude != "" && tolower($1)~tolower(symbol_exclude)) && $2=="struct" { print "cdecl_struct("$1")" }
+(symbol_include != "" && tolower($1)~tolower(symbol_include)) && !(symbol_exclude != "" && tolower($1)~tolower(symbol_exclude)) && $2=="struct" { collect[$4][$3] = "cdecl_struct("$1");" }

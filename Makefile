@@ -23,23 +23,11 @@ CPPFLAGS  = -I$(FFI_CDECL_DIR)
 CFLAGS    = -std=c99 -D_XOPEN_SOURCE=700 -Wall -Wno-deprecated-declarations
 
 GCCLUA    = gcc-lua/gcc/gcclua.so
-FFI_CDECL = $(FFI_CDECL_DIR)/ffi-cdecl.lua
 
 ifndef FFI_CDECL_DIR
   GCC_CDECL_DIR = gcc-lua-cdecl
   FFI_CDECL_DIR = $(GCC_CDECL_DIR)/ffi-cdecl
   FFI_CDECL_LUA_PATH = $(GCC_CDECL_DIR)/?.lua;$(GCC_CDECL_DIR)/?/init.lua
-  ifdef LUA_PATH
-    LUA_PATH := $(FFI_CDECL_LUA_PATH);$(LUA_PATH)
-  else
-    LUA_PATH := $(FFI_CDECL_LUA_PATH);;
-  endif
-  ifdef LUA_PATH_5_2
-    LUA_PATH_5_2 := $(FFI_CDECL_LUA_PATH);$(LUA_PATH_5_2)
-  else
-    LUA_PATH_5_2 := $(FFI_CDECL_LUA_PATH);;
-  endif
-  export LUA_PATH LUA_PATH_5_2
 endif
 
 modules = eina ecore evas elementary
@@ -59,11 +47,8 @@ CFLAGS := $(CFLAGS) $(foreach mod,$(modules),$($(mod)_CFLAGS))
 
 all: $(foreach mod,$(modules),$(mod).lua)
 
-%.lua: %.cdecl.c %.lua.in gcc-lua
-	$(CC) -S $(CPPFLAGS) $(CFLAGS) -fplugin=$(GCCLUA) -fplugin-arg-gcclua-script=$(FFI_CDECL) -fplugin-arg-gcclua-input=$*.lua.in -fplugin-arg-gcclua-output=$@ -o /dev/null $<
-
-%.lua.in: templates/lua.in.in
-	$(SED) "s:<<MODULE>>:$*:g" $< > $@
+%.lua: %.cdecl.c gcc-lua
+	$(CC) -S $(CPPFLAGS) $(CFLAGS) -fplugin=$(GCCLUA) -fplugin-arg-gcclua-script=templates/lua.in.in -fplugin-arg-gcclua-module=$* -fplugin-arg-gcclua-output=$@ -o /dev/null $<
 
 %.collect.c: templates/collect.in
 	$(SED) -e "s:<<MODULE>>:$*:g" $< > $@
@@ -83,7 +68,7 @@ all: $(foreach mod,$(modules),$(mod).lua)
 	$(SED) -e "s:<<MODULE>>:$*:g" $< > $@
 	$(SED) $(foreach header,$($*_HEADERS), -e "s:<<HEADERS>>:#include <$(header)>\n<<HEADERS>>:") -i $@
 	$(SED) -e '/<<HEADERS>>/d' -i $@
-	$(AWK) -v symbol_include="^(_?$*_|GL)" -v symbol_exclude="^(Eina_Tile_Grid_Info|_Eina_Tile_Grid_Slicer|_Eina_Rbtree|_Eina_Lock|EINA_F32P32_PI)$$" $(foreach type,$(types), -f tools/awk-$(type)) $*.ctags >> $@
+	$(AWK) -v symbol_include="^(_?$*_|GL)" -v symbol_exclude="^(Eina_Tile_Grid_Info|_Eina_Tile_Grid_Slicer|_Eina_Rbtree|_Eina_Lock|EINA_F32P32_PI)$$" $(foreach type,$(types), -f tools/awk-$(type)) -f tools/awk-dump-collect $*.ctags >> $@
 
 clean: $(SUBDIRS)
 	$(RM) -r $(foreach mod,$(modules),$(foreach suffix,lua lua.in cdecl.c collect.c collect.D collect.E ctags,$(mod).$(suffix))) $(foreach mod,$(modules),$(foreach type,$(types),$(foreach suffix,cdecl.c,$(mod).$(type).$(suffix))))
