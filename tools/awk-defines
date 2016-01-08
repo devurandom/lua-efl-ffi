@@ -1,1 +1,1 @@
-(symbol_include != "" && tolower($1)~tolower(symbol_include)) && $2=="macro" && /#define[[:space:]]+\w+[[:space:]]+(0[xX])?[0-9a-fA-F]+$/ { print "cdecl_const("$1")" }
+(symbol_include != "" && tolower($1)~tolower(symbol_include)) && !(symbol_exclude != "" && tolower($1)~tolower(symbol_exclude)) && $2=="macro" && /#define[[:space:]]+\w+[[:space:]]+(0[xX])?[0-9a-fA-F]+$/ { print "cdecl_const("$1")" }
