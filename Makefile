@@ -81,7 +81,7 @@ endef
 
 define makerule-type-c
 $(1).$(2).c: $(1).ctags tools/awk-$(2)
-	$(AWK) -v symbol_pattern="^(_$(1)|$(1)|GL)" -f tools/awk-$(2) $$< > $$@.tmp
+	$(AWK) -v symbol_include="^(_$(1)|$(1)|GL)" -f tools/awk-$(2) $$< > $$@.tmp
 	$(UNIQ) < $$@.tmp > $$@
 	$(RM) -f $$@.tmp
 endef
